@@ -13,7 +13,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "push": "pnpm --dir src/ exec clasp push && pnpm --dir src/ exec clasp deploy"
+    "push": "pnpm --dir src/ exec clasp push && pnpm --dir src/ exec clasp deploy",
+    "undeploy": "for id in $(pnpm --dir src/ exec clasp deployments); do [ ${#id} -gt 64 ] && pnpm --dir src/ exec clasp undeploy $id; done"
   },
   "devDependencies": {
     "@google/clasp": "2.4.1"
