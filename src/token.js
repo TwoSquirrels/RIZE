@@ -13,12 +13,12 @@ function updateRizeTokenById(userId) {
   const lineName = fetchLineName(userId);
   const newRizeToken = Utilities.getUuid();
   const newDeadline = Date.now() + 1000 * 300000; // 5 分後
-  const table = ACCESS_TOKEN_SHEET.getSheetValues(
-    2,
-    1,
-    ACCESS_TOKEN_SHEET.getLastRow() - 1,
-    4
-  );
+  const tableBottom = ACCESS_TOKEN_SHEET.getLastRow();
+  if (tableBottom <= 1) {
+    ACCESS_TOKEN_SHEET.appendRow([userId, lineName, newRizeToken, newDeadline]);
+    return newRizeToken;
+  }
+  const table = ACCESS_TOKEN_SHEET.getSheetValues(2, 1, tableBottom - 1, 4);
   const rowIndex = table.findIndex((row) => row[Column.USER_ID] === userId);
   if (rowIndex === -1) {
     ACCESS_TOKEN_SHEET.appendRow([userId, lineName, newRizeToken, newDeadline]);
