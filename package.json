@@ -12,6 +12,9 @@
     "TwoSquirrels"
   ],
   "license": "MIT",
+  "scripts": {
+    "push": "pnpm --dir src/ exec clasp push && pnpm --dir src/ exec clasp deploy"
+  },
   "devDependencies": {
     "@google/clasp": "2.4.1"
   },
