@@ -20,7 +20,10 @@ function doPost(requestEvent) {
           if (event.mode !== "active") return;
           if (event.source.type !== "user") return;
           const rizeToken = updateRizeTokenById(event.source.userId);
-          replyLINE(event.replyToken, `https://uchikoshi-fes.jp/rize?token=${rizeToken}`);
+          replyLINE(
+            event.replyToken,
+            `https://uchikoshi-fes.jp/rize?token=${rizeToken}`
+          );
         });
         return ContentService.createTextOutput("DONE!");
       case "rize":
@@ -31,7 +34,9 @@ function doPost(requestEvent) {
         throw new Error("Invalid path.");
     }
   } catch (error) {
-    const response = ContentService.createTextOutput(JSON.stringify({ error: error.message }));
+    const response = ContentService.createTextOutput(
+      JSON.stringify({ error: error.message })
+    );
     response.setMimeType(ContentService.MimeType.JSON);
     return response;
   }
