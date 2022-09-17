@@ -19,7 +19,7 @@ function updateRizeTokenById(userId) {
     return newRizeToken;
   }
   const table = ACCESS_TOKEN_SHEET.getSheetValues(2, 1, tableBottom - 1, 4);
-  const rowIndex = table.findIndex((row) => row[Column.USER_ID] === userId);
+  const rowIndex = table.findIndex((row) => row[Column.USER_ID - 1] == userId);
   if (rowIndex === -1) {
     ACCESS_TOKEN_SHEET.appendRow([userId, lineName, newRizeToken, newDeadline]);
   } else {
