@@ -35,7 +35,11 @@ function doPost(requestEvent) {
         const { displayName, rizeToken } = updateRizeTokenByToken(
           request.rizeToken
         );
-        const congestions = updateCongestions(/* TODO */);
+        const congestions = updateCongestion(
+          displayName,
+          request.organizationId,
+          request.congestion
+        );
         return ContentService.createTextOutput(
           JSON.stringify({ rizeToken, displayName, congestions })
         );
