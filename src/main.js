@@ -35,6 +35,14 @@ function doPost(requestEvent) {
         const { displayName, rizeToken } = updateRizeTokenByToken(
           request.rizeToken
         );
+        if (typeof request.organizationId !== "string")
+          throw new Error("Invalid organizationId.");
+        if (
+          typeof request.congestions !== -1 &&
+          typeof request.congestions !== 0 &&
+          typeof request.congestions !== 1
+        )
+          throw new Error("Invalid congestions.");
         const congestions = updateCongestion(
           displayName,
           request.organizationId,
