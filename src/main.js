@@ -37,10 +37,25 @@ function doPost(requestEvent) {
         throw new Error("Invalid method.");
     }
   } catch (error) {
+    logDiscord(`Error: ${error.message}`);
     const response = ContentService.createTextOutput(
       JSON.stringify({ error: error.message })
     );
     response.setMimeType(ContentService.MimeType.JSON);
     return response;
   }
+}
+
+function logDiscord(text) {
+  const discordWebhookUrl = PROPERTIES.getProperty("DISCORD_WEBHOOK_URL");
+  if (!discordWebhookUrl) return;
+  const payload = {
+    username: "RIZE Logger",
+    content: text,
+  };
+  UrlFetchApp.fetch(discordWebhookUrl, {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify(payload),
+  });
 }
