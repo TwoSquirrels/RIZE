@@ -19,20 +19,26 @@ function doPost(requestEvent) {
           if (event.type !== "message") return;
           if (event.mode !== "active") return;
           if (event.source.type !== "user") return;
-          const rizeToken = updateRizeTokenById(event.source.userId);
+          const { displayName, rizeToken } = updateRizeTokenById(
+            event.source.userId
+          );
           replyLINE(
             event.replyToken,
-            "トークンを発行しました。\n" +
-              "↓ トークン付き URL\n" +
+            `${displayName} さん専用のアクセストークンを発行しました。\n` +
+              "↓ アクセストークン付き URL\n" +
               `https://uchikoshi-fes.jp/rize?token=${rizeToken}\n` +
               "5 分後にこのトークンは無効となります。"
           );
         });
         return ContentService.createTextOutput('"DONE!"');
       case "rize":
-        const rizeToken = updateRizeTokenByToken(request.rizeToken);
-        // TODO: rize system
-        throw new Error("Now developing.");
+        const { displayName, rizeToken } = updateRizeTokenByToken(
+          request.rizeToken
+        );
+        const congestions = updateCongestions(/* TODO */);
+        return ContentService.createTextOutput(
+          JSON.stringify({ rizeToken, displayName, congestions })
+        );
       default:
         throw new Error("Invalid method.");
     }

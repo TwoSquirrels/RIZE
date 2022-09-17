@@ -30,9 +30,26 @@ function updateRizeTokenById(userId) {
       newDeadline
     );
   }
-  return newRizeToken;
+  return { displayName: lineName, rizeToken: newRizeToken };
 }
 
 function updateRizeTokenByToken(token) {
-  // TODO: update spreadsheet
+  const tableBottom = ACCESS_TOKEN_SHEET.getLastRow();
+  if (tableBottom <= 1) throw new Error("No token found.");
+  const table = ACCESS_TOKEN_SHEET.getSheetValues(2, 1, tableBottom - 1, 4);
+  const rowIndex = table.findIndex(
+    (row) => row[Column.ACCESS_TOKEN - 1] == token
+  );
+  if (rowIndex === -1) throw new Error("No token found.");
+  const userId = table[rowIndex][Column.USER_ID - 1];
+  const displayName = table[rowIndex][Column.DISPLAY_NAME - 1];
+  const newRizeToken = Utilities.getUuid();
+  const newDeadline = Date.now() + 1000 * 600000; // 10 分後
+  ACCESS_TOKEN_SHEET.getRange(rowIndex + 2, Column.ACCESS_TOKEN).setValue(
+    newRizeToken
+  );
+  ACCESS_TOKEN_SHEET.getRange(rowIndex + 2, Column.DEADLINE).setValue(
+    newDeadline
+  );
+  return { userId, displayName, rizeToken: newRizeToken };
 }
