@@ -13,7 +13,7 @@ function getCongestions(moderator = false) {
   const rows = CONGESTION_SHEET.getDataRange().getValues();
   const congestions = rows.slice(1).map((row) => {
     return {
-      organizationId: row[CCongestionolumn.ORGANIZATION_ID - 1],
+      organizationId: row[CongestionColumn.ORGANIZATION_ID - 1],
       updatedAt: row[CongestionColumn.UPDATED_AT - 1],
       updatedBy: moderator ? row[CongestionColumn.UPDATED_BY - 1] : undefined,
       congestion: row[CongestionColumn.CONGESTION - 1],
@@ -31,14 +31,19 @@ function updateCongestion(displayName, organizationId, congestion) {
         (row) => row[CongestionColumn.ORGANIZATION_ID - 1] == organizationId
       ) + 2;
   if (rowNumber === 1) {
-    congestions.push([]);
+    congestions.push({ organizationId });
     rowNumber = congestions.length + 1;
   }
-  congestions[rowNumber - 2][CongestionColumn.UPDATED_AT - 1] = Date.now();
-  congestions[rowNumber - 2][CongestionColumn.UPDATED_BY - 1] = displayName;
-  congestions[rowNumber - 2][CongestionColumn.CONGESTION - 1] = congestion;
+  congestions[rowNumber - 2].updatedAt = Date.now();
+  congestions[rowNumber - 2].updatedBy = displayName;
+  congestions[rowNumber - 2].congestion = congestion;
   CONGESTION_SHEET.getRange(rowNumber, 1, 1, 4).setValues([
-    congestions[rowNumber - 2],
+    [
+      congestions[rowNumber - 2].organizationId,
+      congestions[rowNumber - 2].updatedAt,
+      congestions[rowNumber - 2].updatedBy,
+      congestions[rowNumber - 2].congestion,
+    ],
   ]);
   return congestions;
 }

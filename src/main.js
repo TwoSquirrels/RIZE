@@ -3,7 +3,26 @@
 const PROPERTIES = PropertiesService.getScriptProperties();
 
 function doGet(requestEvent) {
-  return;
+  try {
+    let moderator = null;
+    if (requestEvent.parameter?.rizeToken) {
+      moderator = updateRizeTokenByToken(requestEvent.parameter.rizeToken);
+    }
+    const congestions = getCongestions(moderator !== null);
+    return ContentService.createTextOutput(
+      JSON.stringify({
+        rizeToken: moderator?.rizeToken ?? undefined,
+        displayName: moderator?.displayName ?? undefined,
+        congestions,
+      })
+    );
+  } catch (error) {
+    const response = ContentService.createTextOutput(
+      JSON.stringify({ error: error.message })
+    );
+    response.setMimeType(ContentService.MimeType.JSON);
+    return response;
+  }
 }
 
 function doPost(requestEvent) {
