@@ -9,7 +9,7 @@ function doGet(requestEvent) {
 function doPost(requestEvent) {
   const request = JSON.parse(requestEvent.postData?.contents ?? "null");
   try {
-    switch (requestEvent.pathInfo) {
+    switch (requestEvent.parameter?.method) {
       case "line":
         if (request.destination !== PROPERTIES.getProperty("LINE_ID")) {
           throw new Error("Invalid LINE BOT User Id.");
@@ -22,16 +22,19 @@ function doPost(requestEvent) {
           const rizeToken = updateRizeTokenById(event.source.userId);
           replyLINE(
             event.replyToken,
-            `https://uchikoshi-fes.jp/rize?token=${rizeToken}`
+            "トークンを発行しました。\n" +
+              "↓ トークン付き URL" +
+              `https://uchikoshi-fes.jp/rize?token=${rizeToken}\n` +
+              "5 分後にこのトークンは無効となります。"
           );
         });
-        return ContentService.createTextOutput("DONE!");
+        return ContentService.createTextOutput('"DONE!"');
       case "rize":
         const rizeToken = updateRizeTokenByToken(request.rizeToken);
         // TODO: rize system
         throw new Error("Now developing.");
       default:
-        throw new Error("Invalid path.");
+        throw new Error("Invalid method.");
     }
   } catch (error) {
     const response = ContentService.createTextOutput(

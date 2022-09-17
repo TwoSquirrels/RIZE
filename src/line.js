@@ -11,7 +11,7 @@ function replyLINE(replyToken, text) {
   });
 }
 
-function getLINEName(userId) {
+function fetchLineName(userId) {
   const response = JSON.parse(
     UrlFetchApp.fetch(`https://api.line.me/v2/bot/profile/${userId}`, {
       myamethod: "GET",
