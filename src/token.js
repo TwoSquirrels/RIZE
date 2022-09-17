@@ -36,7 +36,15 @@ function updateRizeTokenByToken(token) {
     rows
       .slice(1)
       .findIndex((row) => row[TokenColumn.ACCESS_TOKEN - 1] == token) + 2;
-  if (rowNumber === 1) throw new Error("Invalid token.");
+  if (rowNumber === 1)
+    throw new Error("Invalid token.\n「これで潜入のつもりか！笑わせるなー！」");
+  if (rows[rowNumber - 1][TokenColumn.DEADLINE - 1] < Date.now()) {
+    ACCESS_TOKEN_SHEET.deleteRow(rowNumber);
+    throw new Error(
+      "Token expired." +
+        "\n「ト…トークンの期限が切れて認証できなくなった…わけじゃないぞ」"
+    );
+  }
   const userId = rows[rowNumber - 1][TokenColumn.USER_ID - 1];
   const displayName = rows[rowNumber - 1][TokenColumn.DISPLAY_NAME - 1];
   const newRizeToken = Utilities.getUuid();
