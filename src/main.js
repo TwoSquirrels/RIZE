@@ -23,7 +23,7 @@ function doPost(requestEvent) {
           replyLINE(
             event.replyToken,
             "トークンを発行しました。\n" +
-              "↓ トークン付き URL" +
+              "↓ トークン付き URL\n" +
               `https://uchikoshi-fes.jp/rize?token=${rizeToken}\n` +
               "5 分後にこのトークンは無効となります。"
           );
