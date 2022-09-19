@@ -4,18 +4,23 @@ const PROPERTIES = PropertiesService.getScriptProperties();
 
 function doGet(requestEvent) {
   try {
-    let moderator = null;
-    if (requestEvent.parameter?.rizeToken) {
-      moderator = updateRizeTokenByToken(requestEvent.parameter.rizeToken);
+    switch (requestEvent.parameter?.method) {
+      case "rize":
+        let moderator = null;
+        if (requestEvent.parameter?.rizeToken) {
+          moderator = updateRizeTokenByToken(requestEvent.parameter.rizeToken);
+        }
+        const congestions = getCongestions(moderator !== null);
+        return ContentService.createTextOutput(
+          JSON.stringify({
+            rizeToken: moderator?.rizeToken ?? undefined,
+            displayName: moderator?.displayName ?? undefined,
+            congestions,
+          })
+        );
+      default:
+        throw new Error("Invalid method.");
     }
-    const congestions = getCongestions(moderator !== null);
-    return ContentService.createTextOutput(
-      JSON.stringify({
-        rizeToken: moderator?.rizeToken ?? undefined,
-        displayName: moderator?.displayName ?? undefined,
-        congestions,
-      })
-    );
   } catch (error) {
     const response = ContentService.createTextOutput(
       JSON.stringify({ error: error.message })
@@ -57,9 +62,9 @@ function doPost(requestEvent) {
         if (typeof request.organizationId !== "string")
           throw new Error("Invalid organizationId.");
         if (
-          typeof request.congestions !== -1 &&
-          typeof request.congestions !== 0 &&
-          typeof request.congestions !== 1
+          typeof request.congestion !== -1 &&
+          typeof request.congestion !== 0 &&
+          typeof request.congestion !== 1
         )
           throw new Error("Invalid congestions.");
         const congestions = updateCongestion(
